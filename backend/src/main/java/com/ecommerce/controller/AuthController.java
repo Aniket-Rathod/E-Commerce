@@ -2,13 +2,13 @@ package com.ecommerce.controller;
 
 import com.ecommerce.config.JwtProvider;
 import com.ecommerce.exception.UserException;
-//import com.ecommerce.model.Cart;
+import com.ecommerce.model.Cart;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.request.LoginRequest;
 
 import com.ecommerce.response.AuthResponse;
-//import com.ecommerce.service.CartService;
+import com.ecommerce.service.CartService;
 import com.ecommerce.service.CustomeUserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +34,15 @@ public class AuthController {
     private JwtProvider jwtProvider;
     private PasswordEncoder passwordEncoder;
     private CustomeUserServiceImpl customeUserService;
-    //private CartService cartService;
+    private CartService cartService;
 
-    public AuthController(UserRepository userRepository,CustomeUserServiceImpl customeUserService,PasswordEncoder passwordEncoder,JwtProvider jwtProvider){
+    public AuthController(UserRepository userRepository,CustomeUserServiceImpl customeUserService,
+                          PasswordEncoder passwordEncoder,JwtProvider jwtProvider, CartService cartService){
         this.userRepository = userRepository;
         this.customeUserService = customeUserService;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
-        //this.cartService = cartService;
+        this.cartService = cartService;
     }
 
     @PostMapping("/signup")
@@ -65,7 +66,7 @@ public class AuthController {
         createdUser.setLastName(lastname);
 
         User savedUser = userRepository.save(createdUser);
-        //Cart cart = cartService.createCart(savedUser);
+        Cart cart = cartService.createCart(savedUser);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(),savedUser.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
