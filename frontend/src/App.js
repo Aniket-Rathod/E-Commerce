@@ -12,17 +12,25 @@ import OrderDetails from './customer/components/Order/OrderDetails';
 import { Route, Routes } from 'react-router-dom';
 import CustomerRouters from './Routers/CustomerRouters';
 
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getUser } from './State/Auth/Action';
+
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      dispatch(getUser(token));
+    }
+  }, [dispatch]);
+
   return (
     <div className="">
       <Routes>
-        <Route path='/*' element={<CustomerRouters/>}>
-
-        </Route>
+        <Route path='/*' element={<CustomerRouters/>} />
       </Routes>
-      
-
-
     </div>
   );
 }
