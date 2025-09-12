@@ -8,7 +8,6 @@ import com.ecommerce.request.AddItemRequest;
 import com.ecommerce.response.ApiResponse;
 import com.ecommerce.service.CartService;
 import com.ecommerce.service.UserService;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,12 +47,7 @@ public class CartController {
             throw new UserException("JWT token is empty");
         }
 
-        User user = null;
-        try {
-            user = userService.findUserProfileByJwt(jwt);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserProfileByJwt(jwt);
         Cart cart = cartService.findUserCart(user.getId());
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
@@ -67,12 +61,7 @@ public class CartController {
             throw new UserException("Missing or invalid Authorization header");
         }
         String jwt = authHeader.substring(7); // Remove "Bearer " prefix
-        User user = null;
-        try {
-            user = userService.findUserProfileByJwt(jwt);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserProfileByJwt(jwt);
         cartService.addCartItem(user.getId(), req);
 
         ApiResponse res = new ApiResponse();

@@ -1,6 +1,5 @@
 package com.ecommerce.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class Rating {
     private User user;
 
     @JsonIgnore
-    @ManyToOne   //(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",nullable = false)
     private Product product;
 

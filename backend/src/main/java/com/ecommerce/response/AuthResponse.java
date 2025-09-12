@@ -2,12 +2,17 @@ package com.ecommerce.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class AuthResponse {
+
     private String jwt;
     private String message;
+
+    public AuthResponse(String jwt,String message){
+        super();
+        this.jwt = jwt;
+        this.message = message;
+    }
+
 }

@@ -7,8 +7,8 @@ import com.ecommerce.model.User;
 import com.ecommerce.request.ReviewRequest;
 import com.ecommerce.service.ReviewService;
 import com.ecommerce.service.UserService;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +28,7 @@ public class ReviewController {
     @PostMapping("/create")
     public ResponseEntity<Review> createReviewReview(@RequestBody ReviewRequest req,
                                                      @RequestHeader("Authorization") String jwt) throws UserException, ProductException{
-        User user = null;
-        try {
-            user = userService.findUserProfileByJwt(jwt);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserProfileByJwt(jwt);
 
         Review review = reviewService.createReview(req,user);
 

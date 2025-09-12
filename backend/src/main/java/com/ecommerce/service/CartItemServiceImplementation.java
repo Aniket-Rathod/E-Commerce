@@ -8,7 +8,6 @@ import com.ecommerce.model.Product;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.CartItemRepository;
 import com.ecommerce.repository.CartRepository;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -39,12 +38,7 @@ public class CartItemServiceImplementation implements CartItemService{
     public CartItem updateCartItem(Long userId, Long id, CartItem cartItem) throws CartItemException, UserException {
 
         CartItem item = findCartItemById(id);
-        User user = null;
-        try {
-            user = userService.findUserById(item.getUserId());
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserById(item.getUserId());
 
         if (user.getId().equals(userId)){
             item.setQuantity(cartItem.getQuantity());
@@ -66,19 +60,9 @@ public class CartItemServiceImplementation implements CartItemService{
     public void removecartItem(Long userId, Long cartItemId) throws CartItemException, UserException {
         CartItem cartItem = findCartItemById(cartItemId);
 
-        User user = null;
-        try {
-            user = userService.findUserById(cartItem.getUserId());
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserById(cartItem.getUserId());
 
-        User reqUser = null;
-        try {
-            reqUser = userService.findUserById(userId);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User reqUser = userService.findUserById(userId);
 
         if (user.getId().equals(reqUser.getId())){
             cartItemRepository.deleteById(cartItemId);

@@ -36,8 +36,7 @@ public class AuthController {
     private CustomeUserServiceImpl customeUserService;
     private CartService cartService;
 
-    public AuthController(UserRepository userRepository,CustomeUserServiceImpl customeUserService,
-                          PasswordEncoder passwordEncoder,JwtProvider jwtProvider, CartService cartService){
+    public AuthController(UserRepository userRepository,CustomeUserServiceImpl customeUserService,PasswordEncoder passwordEncoder,JwtProvider jwtProvider,CartService cartService){
         this.userRepository = userRepository;
         this.customeUserService = customeUserService;
         this.passwordEncoder = passwordEncoder;
@@ -73,8 +72,7 @@ public class AuthController {
 
         String token = jwtProvider.generateToken(authentication);
 
-
-        AuthResponse authResponse = new AuthResponse(token,"SignUp Successfully");
+        AuthResponse authResponse = new AuthResponse(token,"Signup Successfully");
 
         return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
     }

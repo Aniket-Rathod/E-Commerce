@@ -1,6 +1,7 @@
 package com.ecommerce.model;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,24 +15,16 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
+    @Column(name = "title")
     private String title;
 
     @Column(name = "description")
     private String description;
 
-//    @Column(name = "price")
-    private int price;
-
-    @Column(name = "discounted_price")
-    private int discountedPrice;
-
-    @Column(name = "discount_present")
-    private int discountPresent;
-
-    @Column(name = "quantity")
-    private int quantity;
+    @Column(name = "price")
+    private Integer price;
 
     @Column(name = "brand")
     private String brand;
@@ -39,7 +32,6 @@ public class Product {
     @Column(name = "color")
     private String color;
 
-    @Embedded
     @ElementCollection
     @Column(name = "sizes")
     private Set<Size> sizes = new HashSet<>();
@@ -47,19 +39,28 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    @Column(name = "num_rating")
-    private int numRatings;
+    @Column(name = "num_ratings")
+    private Integer numRatings;  // Changed to Integer
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;
 
     private LocalDateTime createdAt;
+
+    @Column(name = "discount_percent")
+    private Integer discountPercent;
+
+    @Column(name = "discounted_price")
+    private Double discountedPrice;
+
+    @Column(name = "quantity")
+    private Integer quantity;  // Changed to Integer
 
 }

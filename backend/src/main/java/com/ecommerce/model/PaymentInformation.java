@@ -1,6 +1,5 @@
 package com.ecommerce.model;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;

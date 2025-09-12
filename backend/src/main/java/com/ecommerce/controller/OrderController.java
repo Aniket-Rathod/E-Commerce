@@ -7,10 +7,10 @@ import com.ecommerce.model.Order;
 import com.ecommerce.model.User;
 import com.ecommerce.service.OrderService;
 import com.ecommerce.service.UserService;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,12 +28,7 @@ public class OrderController {
     @PostMapping("/")
     public ResponseEntity<Order> createOrder(@RequestBody Address shippingAddress,
                                              @RequestHeader("Authorization") String jwt) throws UserException{
-        User user = null;
-        try {
-            user = userService.findUserProfileByJwt(jwt);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserProfileByJwt(jwt);
 
         Order order = orderService.createOrder(user,shippingAddress);
 
@@ -45,12 +40,7 @@ public class OrderController {
     @GetMapping("/user")
     public ResponseEntity<List<Order>> userOrderHistory(@RequestHeader("Authorization") String jwt) throws UserException{
 
-        User user = null;
-        try {
-            user = userService.findUserProfileByJwt(jwt);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserProfileByJwt(jwt);
 
         List<Order> orders = orderService.userOrderHistory(user.getId());
 
@@ -61,11 +51,7 @@ public class OrderController {
     public ResponseEntity<Order> findOrderById(@PathVariable("Id") Long orderId,
                                                @RequestHeader("Authorization") String jwt) throws UserException, OrderException{
 
-        try {
-            User user = userService.findUserProfileByJwt(jwt);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserProfileByJwt(jwt);
 
         Order order = orderService.findOrderById(orderId);
 

@@ -3,7 +3,6 @@ package com.ecommerce.controller;
 import com.ecommerce.exception.UserException;
 import com.ecommerce.model.User;
 import com.ecommerce.service.UserService;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +20,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<User> getUserProfileHandler(@RequestHeader("Authorization") String jwt)throws UserException{
-        User user = null;
-        try {
-            user = userService.findUserProfileByJwt(jwt);
-        } catch (ExecutionControl.UserException e) {
-            throw new RuntimeException(e);
-        }
+        User user = userService.findUserProfileByJwt(jwt);
 
         return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
     }

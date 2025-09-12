@@ -10,6 +10,10 @@ import com.ecommerce.request.AddItemRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class CartServiceImplementation implements CartService {
     private final CartRepository cartRepository;
@@ -49,11 +53,6 @@ public class CartServiceImplementation implements CartService {
             cartItem.setPrice(price);
             cartItem.setSize(req.getSize());
 
-            //CartItem createdCartItem=cartItemService.createCartItem(cartItem);
-            //cart.getCartItems().add(createdCartItem);
-
-            //Not aware of this - start
-
             // ✅ Use helper method to maintain both sides of the relation
             cart.addItem(cartItem);
 
@@ -66,8 +65,6 @@ public class CartServiceImplementation implements CartService {
             isPresent.setPrice(price);
             cartItemService.createCartItem(isPresent); // update existing item
         }
-
-        //Not aware of this - End
 
         return "Item added to cart";
     }
@@ -94,7 +91,6 @@ public class CartServiceImplementation implements CartService {
         cart.setDiscount(totalPrice - totalDiscountedPrice);
 
         return cart;
-        // return cartRepository.save(cart);
     }
 
 

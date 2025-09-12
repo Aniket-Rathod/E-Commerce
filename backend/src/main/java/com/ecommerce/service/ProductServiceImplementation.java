@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.stream.Collectors;
+
 
 @Service
 public class ProductServiceImplementation implements ProductService{
@@ -70,8 +72,8 @@ public class ProductServiceImplementation implements ProductService{
         product.setTitle(req.getTitle());
         product.setColor(req.getColor());
         product.setDescription(req.getDescription());
-        product.setDiscountedPrice(req.getDiscountedPrice());
-        product.setDiscountPresent(req.getDiscountPercent());
+        product.setDiscountedPrice((double) req.getDiscountedPrice());
+        product.setDiscountPercent(req.getDiscountPercent());
         product.setImageUrl(req.getImageUrl());
         product.setBrand(req.getBrand());
         product.setPrice(req.getPrice());

@@ -1,9 +1,9 @@
 package com.ecommerce.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -34,17 +34,10 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
+    @ToString.Exclude   // ✅ prevent infinite recursion
     private User user;
 
     private String mobile;
 
 
 }
-
-
-
-
-
-
-
-
