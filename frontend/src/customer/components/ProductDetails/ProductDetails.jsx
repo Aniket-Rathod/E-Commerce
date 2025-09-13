@@ -3,7 +3,10 @@ import { Button, Grid, Box, LinearProgress, Rating } from "@mui/material";
 import ProductReviewCard from "./ProductReviewCard";
 import { mens_kurta } from "../../../Data/men_kurta";
 import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { findProductsById } from "../../../State/Product/Action";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -73,10 +76,25 @@ function classNames(...classes) {
 
 export default function ProductDetails() {
   const navigate=useNavigate();
+  const params=useParams();
+  const dispatch=useDispatch();
 
   const handleAddToCart=()=>{
     navigate("/cart")
   }
+
+  // console.log("----",params.productId);
+
+  //Product Find By ID:
+  useEffect(()=>{
+    const data={productId:params.productId}
+    dispatch(findProductsById(data))
+
+  },[params.productId])
+
+
+
+
   return (
     
     <div className="bg-white lg:px-20">

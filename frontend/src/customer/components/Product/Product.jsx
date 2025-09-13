@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -31,7 +31,17 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import { colors } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { findProducts } from "../../../State/Product/Action";
+import { store } from "../../../State/store";
+import Pagination from "@mui/material/Pagination";
 
 const sortOptions = [
   { name: "Price: Low to High", href: "#", current: false },
@@ -46,6 +56,28 @@ export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const param = useParams();
+  const dispatch = useDispatch();
+  const { product } = useSelector((store) => store);
+
+  const decodedQueryString = decodeURIComponent(location.search);
+  const searchParams = new URLSearchParams(decodedQueryString);
+  const colorValue = searchParams.get("color");
+  const sizeValue = searchParams.get("size");
+  const priceValue = searchParams.get("price");
+  const discount = searchParams.get("discount");
+  const sortValue = searchParams.get("sort");
+  const pageNumber = searchParams.get("page") || 1;
+  const stock = searchParams.get("stock");
+
+
+    // Handling Paging:
+  const handlePaginationChange = (event, value) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("page", value);
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` });
+  };
 
   const handleFilter = (value, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
@@ -74,15 +106,43 @@ export default function Product() {
   };
 
   const handleRadioFilterChange = (e, sectionId) => {
-    const searchParams = new URLSearchParams(location.search)
+    const searchParams = new URLSearchParams(location.search);
 
-    searchParams.set(sectionId, e.target.value)
+    searchParams.set(sectionId, e.target.value);
     navigate({ search: `?${searchParams.toString()}` });
     if (!e.target.value) {
       searchParams.delete(sectionId);
     }
+  };
 
-  }
+  // #8
+  useEffect(() => {
+    const [minPrice, maxPrice] =
+      priceValue === null ? [0, 10000] : priceValue.split("-").map(Number);
+
+    const data = {
+      category: param.levelThree,
+      colors: colorValue || [],
+      sizes: sizeValue | [],
+      minPrice,
+      maxPrice,
+      minDiscount: discount || 0,
+      sort: sortValue || "price_low",
+      pageNumber: pageNumber - 1,
+      pageSize: 12,
+      stock: stock,
+    };
+    dispatch(findProducts(data));
+  }, [
+    param.levelThree,
+    colorValue,
+    sizeValue,
+    priceValue,
+    discount,
+    sortValue,
+    pageNumber,
+    stock,
+  ]);
 
   // accordion logic
   const [openDisclosure, setOpenDisclosure] = useState(null);
@@ -359,7 +419,9 @@ export default function Product() {
                                 >
                                   {section.options.map((option, optionIdx) => (
                                     <FormControlLabel
-                                      onChange={(e)=>handleRadioFilterChange(e,section.id)}
+                                      onChange={(e) =>
+                                        handleRadioFilterChange(e, section.id)
+                                      }
                                       key={optionIdx}
                                       value={option.value}
                                       control={
@@ -390,11 +452,23 @@ export default function Product() {
               {/* Product grid */}
               <div className="lg:col-span-4 w-full">
                 <div className="flex flex-wrap justify-center bg-white py-5">
-                  {mens_kurta.map((item) => (
+                  {product.products?.content?.map((item) => (
                     <ProductCard key={item.id} product={item} />
                   ))}
                 </div>
               </div>
+            </div>
+          </section>
+
+          {/* Pagination */}
+          <section className="w-full">
+            {/* Pagination */}
+            <div className="px-4 py-5 flex justify-center">
+              <Pagination
+                count={product?.products?.totalPages}
+                color="secondary"
+                onChange={handlePaginationChange}
+              />
             </div>
           </section>
         </main>
