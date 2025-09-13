@@ -5,8 +5,11 @@ import { mens_kurta } from "../../../Data/men_kurta";
 import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { findProductsById } from "../../../State/Product/Action";
+import { addItemToCart } from "../../../State/Cart/Action";
+import React, { useState } from "react";
+
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -75,28 +78,27 @@ function classNames(...classes) {
 }
 
 export default function ProductDetails() {
-  const navigate=useNavigate();
-  const params=useParams();
-  const dispatch=useDispatch();
+  const [selectedSize,setSelectedSize] = useState(" ");
+  const navigate = useNavigate();
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { products } = useSelector((store) => store);
 
-  const handleAddToCart=()=>{
-    navigate("/cart")
-  }
+  const handleAddToCart = () => {
+    const data={productId:params.productId,size:selectedSize}
+    dispatch(addItemToCart(data))
+    navigate("/cart");
+  };
 
   // console.log("----",params.productId);
 
   //Product Find By ID:
-  useEffect(()=>{
-    const data={productId:params.productId}
-    dispatch(findProductsById(data))
-
-  },[params.productId])
-
-
-
+  useEffect(() => {
+    const data = { productId: params.productId };
+    dispatch(findProductsById(data));
+  }, [params.productId]);
 
   return (
-    
     <div className="bg-white lg:px-20">
       <div className="pt-6">
         <nav aria-label="Breadcrumb">
@@ -137,7 +139,6 @@ export default function ProductDetails() {
             </li>
           </ol>
         </nav>
-        
         {/* section 1 */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-10 px-4 pt-10">
           {/* Image gallery */}
@@ -145,8 +146,8 @@ export default function ProductDetails() {
             {/* Main Image */}
             <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
               <img
+                src={products.product?.imageUrl}
                 alt={product.images[0].alt}
-                src={product.images[0].src}
                 className="aspect-[3/4] w-full rounded-lg object-cover"
               />
             </div>
@@ -172,20 +173,24 @@ export default function ProductDetails() {
           <div className="lg:col-span-1 maxt-auto max-w-2x1 px-4 pb-16 sm:px-6 lg:max-w-7x1 lg:px-8 lg:pb-24">
             <div className="lg:col-span-2 ">
               <h1 className="text-lg lg:text-x1 font-semibold text-gray-900 ">
-                BULLMER
+                {products.product?.brand}
               </h1>
-              <h1 className="text-lg lg:text-xl text-grey-900 opacity-60 pt-1">
-                Beige Front and Back Printed/Colourblock Baggy/Oversized Tshirt
-              </h1>
+              <h1 className="text-lg lg:text-xl text-grey-900 opacity-60 pt-1">{products.product?.title}</h1>
             </div>
 
             {/* Options */}
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <div className="flex space-x-5 items-center text-lg lg:text-xl text-grey-900 mt-6">
-                <p className="font-semibold">₹299</p>
-                <p className="opacity-50 line-through">₹499</p>
-                <p className="text-green-600 font-semibold">15% off</p>
+                <p className="font-semibold">
+                  {products.product?.discountedPrice}
+                </p>
+                <p className="opacity-50 line-through">
+                  {products.product?.price}
+                </p>
+                <p className="text-green-600 font-semibold">
+                  {products.product?.discountPercent}% off
+                </p>
               </div>
 
               {/* Reviews */}
@@ -231,7 +236,8 @@ export default function ProductDetails() {
                   </fieldset>
                 </div>
 
-                <Button onClick={handleAddToCart}
+                <Button
+                  onClick={handleAddToCart}
                   variant="contained"
                   sx={{ px: "2rem", py: "1rem", bgcolor: "#9155fd" }}
                 >
@@ -278,7 +284,6 @@ export default function ProductDetails() {
             </div>
           </div>
         </section>
-
         {/* Rating & Review */}
         <section>
           <h1 className="font-semibold text-lg pb-4">Recent Review & Rating</h1>
@@ -389,7 +394,6 @@ export default function ProductDetails() {
             </div>
           </div>
         </section>{" "}
-
         {/* Similar products */}
         <section className="pt-10">
           <h1 className="py-5 text-xl font-bold">Similar Products</h1>
