@@ -19,9 +19,14 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/profile")
-    public ResponseEntity<User> getUserProfileHandler(@RequestHeader("Authorization") String jwt)throws UserException{
+    public ResponseEntity<User> getUserProfileHandler(@RequestHeader("Authorization") String authorizationHeader) throws UserException {
+        String jwt = authorizationHeader;
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            jwt = authorizationHeader.substring(7);
+        }
         User user = userService.findUserProfileByJwt(jwt);
-
         return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
     }
+
+
 }

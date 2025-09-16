@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class ReviewServiceImplementation implements ReviewService{
+public class ReviewServiceImpl implements ReviewService {
+    private final ReviewRepository reviewRepository;
 
-    private ReviewRepository reviewRepository;
-    private ProductService productService;
-    private ProductRepository productRepository;
+    private final ProductService productService;
 
+    private final ProductRepository productRepository;
 
-    public ReviewServiceImplementation(ReviewRepository reviewRepository,ProductService productService,ProductRepository productRepository){
-        this.productService = productService;
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ProductService productService, ProductRepository productRepository) {
         this.reviewRepository = reviewRepository;
+        this.productService = productService;
         this.productRepository = productRepository;
     }
 
@@ -35,7 +35,6 @@ public class ReviewServiceImplementation implements ReviewService{
         review.setProduct(product);
         review.setReview(req.getReview());
         review.setCreatedAt(LocalDateTime.now());
-
         return reviewRepository.save(review);
     }
 

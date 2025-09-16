@@ -1,12 +1,10 @@
 package com.ecommerce.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
 public class Cart {
 
@@ -18,8 +16,8 @@ public class Cart {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
-    //@Column(name = "cart_items")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "cart_items")
     private Set<CartItem> cartitems = new HashSet<>();
 
     @Column(name = "total_price")
@@ -32,16 +30,72 @@ public class Cart {
 
     private int discount;
 
-
-    public void addItem(CartItem item) {
-        cartitems.add(item);
-        item.setCart(this);
+    public Cart() {
     }
 
-    // 🔹 Helper method to remove an item safely
-    public void removeItem(CartItem item) {
-        cartitems.remove(item);
-        item.setCart(null);
+    public Cart(Long id, User user, Set<CartItem> cartitems, double totalPrice, int totalItem, int totalDiscountedPrice, int discount) {
+        this.id = id;
+        this.user = user;
+        this.cartitems = cartitems;
+        this.totalPrice = totalPrice;
+        this.totalItem = totalItem;
+        this.totalDiscountedPrice = totalDiscountedPrice;
+        this.discount = discount;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<CartItem> getCartitems() {
+        return cartitems;
+    }
+
+    public void setCartitems(Set<CartItem> cartitems) {
+        this.cartitems = cartitems;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public int getTotalItem() {
+        return totalItem;
+    }
+
+    public void setTotalItem(int totalItem) {
+        this.totalItem = totalItem;
+    }
+
+    public int getTotalDiscountedPrice() {
+        return totalDiscountedPrice;
+    }
+
+    public void setTotalDiscountedPrice(int totalDiscountedPrice) {
+        this.totalDiscountedPrice = totalDiscountedPrice;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
 }

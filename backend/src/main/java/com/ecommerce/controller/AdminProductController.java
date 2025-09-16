@@ -1,6 +1,5 @@
 package com.ecommerce.controller;
 
-import ch.qos.logback.core.model.processor.ProcessorException;
 import com.ecommerce.exception.ProductException;
 import com.ecommerce.model.Product;
 import com.ecommerce.request.CreateProductRequest;
@@ -16,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/products")
 public class AdminProductController {
-
     @Autowired
     private ProductService productService;
 

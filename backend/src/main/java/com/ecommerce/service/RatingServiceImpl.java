@@ -12,14 +12,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class RatingServiceImplementation implements RatingService{
+public class RatingServiceImpl implements RatingService {
+    private final RatingRepository ratingRepository;
+    private final ProductService productService;
 
-    private RatingRepository ratingRepository;
-    private ProductService productService;
-
-    public RatingServiceImplementation(RatingRepository ratingRepository,ProductService productService){
-        this.productService = productService;
+    public RatingServiceImpl(RatingRepository ratingRepository, ProductService productService) {
         this.ratingRepository = ratingRepository;
+        this.productService = productService;
     }
 
     @Override
@@ -31,12 +30,11 @@ public class RatingServiceImplementation implements RatingService{
         rating.setUser(user);
         rating.setRating(req.getRating());
         rating.setCreatedAt(LocalDateTime.now());
-
         return ratingRepository.save(rating);
     }
 
     @Override
     public List<Rating> getProductsRating(Long productId) {
-        return ratingRepository.getAllProductRating(productId);
+        return ratingRepository.getAllProductsRating(productId);
     }
 }

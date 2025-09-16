@@ -4,29 +4,31 @@ import com.ecommerce.exception.OrderException;
 import com.ecommerce.model.Address;
 import com.ecommerce.model.Order;
 import com.ecommerce.model.User;
-import java.util.*;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 
+@Service
 public interface OrderService {
+    Order createOrder(User user, Address shippingAddress);
 
-    public Order createOrder(User user, Address shippingAddress);
+    Order findOrderById(Long orderId) throws OrderException;
 
-    public Order findOrderById(Long orderId) throws OrderException;
+    List<Order> usersOrderHistory(Long userId);
 
-    public List<Order> userOrderHistory(Long userId);
+    Order placedOrder(Long orderId) throws OrderException;
 
-    public Order placedOrder(Long orderId) throws OrderException;
+    Order confirmedOrder(Long orderId) throws OrderException;
 
-    public Order confirmedOrder(Long orderId) throws OrderException;
+    Order shippedOrder(Long orderId) throws OrderException;
 
-    public Order shippedOrder(Long orderId) throws OrderException;
+    Order deliveredOrder(Long orderId) throws OrderException;
 
-    public Order deliveredOrder(Long orderId) throws OrderException;
+    List<Order> getAllOrders();
 
-    public Order cancledOrder(Long orderId) throws OrderException;
+    Order cancelOrder(Long orderId) throws OrderException;
 
-    public List<Order> getAllOrders();
+    void deleteOrder(Long orderId) throws OrderException;
 
-    public void deleteOrder(Long orderId) throws OrderException;
-
+    Order updateShippingAddress(Long orderId, Address newAddress) throws OrderException;
 }

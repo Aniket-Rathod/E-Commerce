@@ -2,16 +2,19 @@ package com.ecommerce.repository;
 
 import com.ecommerce.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface CategoryRepository extends JpaRepository<Category,Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    public Category findByName(String name);
+    // Find by name only (may cause conflicts if used alone)
+    Category findByName(String name);
 
-    @Query("SELECT c FROM Category c WHERE c.name = :name AND c.parentCategory.name = :parentCategoryName")
-    public Category findByNameAndParent(@Param("name") String name,
-                                        @Param("parentCategoryName") String parentCategoryName);
+    // Find category by name + parent (ensures proper hierarchy)
+    Optional<Category> findByNameAndParentCategory(String name, Category parentCategory);
+
+    // Find category by name + level (cleaner and avoids wrong reuse)
+    Optional<Category> findByNameAndLevel(String name, int level);
 }

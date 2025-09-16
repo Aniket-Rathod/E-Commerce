@@ -16,42 +16,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
-
     @Autowired
     private CartService cartService;
 
     @Autowired
     private UserService userService;
 
-//    @GetMapping("/")
-//    public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String authHeader) throws UserException {
-//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-//            throw new UserException("Missing or invalid Authorization header");
-//        }
-//        String jwt = authHeader.substring(7); // Remove "Bearer " prefix
-//        User user = userService.findUserProfileByJwt(jwt);
-//        Cart cart = cartService.findUserCart(user.getId());
-//        return new ResponseEntity<>(cart, HttpStatus.OK);
-//    }
-
     @GetMapping("/")
     public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String authHeader) throws UserException {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new UserException("Missing or invalid Authorization header");
         }
-
-        String jwt = authHeader.substring(7).trim();
-        System.out.println("Extracted JWT: [" + jwt + "]");
-
-        if (jwt.isEmpty()) {
-            throw new UserException("JWT token is empty");
-        }
-
+        String jwt = authHeader.substring(7); // Remove "Bearer " prefix
         User user = userService.findUserProfileByJwt(jwt);
         Cart cart = cartService.findUserCart(user.getId());
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
-
 
     @PutMapping("/add")
     public ResponseEntity<ApiResponse> addItemToCart(@RequestBody AddItemRequest req,
@@ -69,5 +49,4 @@ public class CartController {
         res.setStatus(true);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
-
 }

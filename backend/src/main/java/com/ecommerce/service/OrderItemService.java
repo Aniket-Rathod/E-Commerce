@@ -1,8 +1,9 @@
 package com.ecommerce.service;
 
 import com.ecommerce.model.OrderItem;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface OrderItemService {
-
-    public OrderItem createOrderItem(OrderItem orderItem);
+    OrderItem createOrderItem(OrderItem orderItem);
 }
