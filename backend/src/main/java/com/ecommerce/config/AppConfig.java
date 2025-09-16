@@ -27,13 +27,11 @@ public class AppConfig {
                             "http://localhost:3000",
                             "http://localhost:5173",
                             "http://localhost:4200",
-                            "https://ecommerce-taupe-eta-99.vercel.app",
-                            "https://ecommerce-gk1scsuaz-raj-kashids-projects.vercel.app",
-                            "https://ecommerce-backend-production-ff66.up.railway.app"
+                            "https://e-commerce-frontend-mlafz4bnf-aniket-rathods-projects-d92c7b3c.vercel.app"
                     ));
                     cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     cfg.setAllowCredentials(true);
-                    cfg.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+                    cfg.setAllowedHeaders(List.of("*"));
                     cfg.setExposedHeaders(List.of("Authorization"));
                     cfg.setMaxAge(3600L);
                     return cfg;
