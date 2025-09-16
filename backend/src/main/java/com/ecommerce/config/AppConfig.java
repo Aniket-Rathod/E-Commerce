@@ -1,5 +1,6 @@
 package com.ecommerce.config;
 
+import com.ecommerce.config.JwtValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,16 +20,20 @@ public class AppConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .cors().configurationSource(request -> {
+        return http
+                // ✅ session management (new lambda style)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                // ✅ cors configuration (new lambda style)
+                .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration cfg = new CorsConfiguration();
                     cfg.setAllowedOrigins(Arrays.asList(
                             "http://localhost:3000",
                             "http://localhost:5173",
                             "http://localhost:4200",
-                            "https://e-commerce-frontend-mlafz4bnf-aniket-rathods-projects-d92c7b3c.vercel.app"
+                            "https://e-commerce-frontend-mlafz4bnf-aniket-rathods-projects-d92c7b3c.vercel.app",
+                            "https://devikas-shop.vercel.app"
                     ));
                     cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     cfg.setAllowCredentials(true);
@@ -35,18 +41,18 @@ public class AppConfig {
                     cfg.setExposedHeaders(List.of("Authorization"));
                     cfg.setMaxAge(3600L);
                     return cfg;
-                })
-                .and()
-                .csrf().disable()
+                }))
+                // ✅ csrf disable (new way)
+                .csrf(AbstractHttpConfigurer::disable)
+                // ✅ authorize requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()   // ✅ allow signin/signup
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                // only validate JWT for protected endpoints
-                .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class);
-
-        return http.build();
+                // ✅ add custom JWT validator filter
+                .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
