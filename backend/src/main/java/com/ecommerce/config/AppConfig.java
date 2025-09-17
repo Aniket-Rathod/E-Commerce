@@ -32,8 +32,7 @@ public class AppConfig {
                             "http://localhost:3000",
                             "http://localhost:5173",
                             "http://localhost:4200",
-                            "https://e-commerce-frontend-mlafz4bnf-aniket-rathods-projects-d92c7b3c.vercel.app",
-                            "https://devikas-shop.vercel.app"
+                            "https://e-commerce-frontend-mlafz4bnf-aniket-rathods-projects-d92c7b3c.vercel.app"
                     ));
                     cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     cfg.setAllowCredentials(true);
