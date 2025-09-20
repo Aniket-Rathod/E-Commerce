@@ -21,36 +21,33 @@ public class AppConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                // ✅ session management (new lambda style)
+                // ✅ stateless session
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // ✅ cors configuration (new lambda style)
+                // ✅ CORS configuration
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration cfg = new CorsConfiguration();
-                    cfg.setAllowedOrigins(Arrays.asList(
-                            "http://localhost:3000",
-                            "http://localhost:5173",
-                            "http://localhost:4200",
-                            "https://e-commerce-frontend-mlafz4bnf-aniket-rathods-projects-d92c7b3c.vercel.app",
-                            "https://e-commerce-frontend-gamma-three.vercel.app"
+                    cfg.setAllowedOriginPatterns(List.of(
+                            "http://localhost:*",
+                            "https://*.vercel.app" // allow any Vercel frontend subdomain
                     ));
-                    cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                     cfg.setAllowCredentials(true);
                     cfg.setAllowedHeaders(List.of("*"));
                     cfg.setExposedHeaders(List.of("Authorization"));
                     cfg.setMaxAge(3600L);
                     return cfg;
                 }))
-                // ✅ csrf disable (new way)
+                // ✅ disable CSRF
                 .csrf(AbstractHttpConfigurer::disable)
-                // ✅ authorize requests
+                // ✅ request authorization
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                // ✅ add custom JWT validator filter
+                // ✅ JWT filter
                 .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
                 .build();
     }
